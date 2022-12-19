@@ -19,9 +19,7 @@ class K_means:
                 distanceCalc = K_means.calcDistance([node[2], node[3]], [nodeCH[2], nodeCH[3]])
                 if(distance == '' or distanceCalc < distance):
                     distance = distanceCalc
-                    # node[7] = centroids.index(centroid)
                     node[7] = nodeCH
-
 
         # Calc new centroids
         collection = []
@@ -55,9 +53,7 @@ class K_means:
                     distanceCalc = K_means.calcDistance([node[2], node[3]], centroid[0])
                     if(distance == '' or distanceCalc < distance):
                         distance = distanceCalc
-                        # node[7] = centroids.index(centroid)
                         node[7] = centroid[0]
-        
         
             # Calc new centroids
             collection = []

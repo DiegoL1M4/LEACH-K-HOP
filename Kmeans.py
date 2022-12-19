@@ -12,41 +12,66 @@ class K_means:
     def exec(CH, nodes, movements):
         centroids = []
         
+        # Definition of Centroids
+        for node in nodes:
+            distance = ''
+            for nodeCH in CH:
+                distanceCalc = K_means.calcDistance([node[2], node[3]], [nodeCH[2], nodeCH[3]])
+                if(distance == '' or distanceCalc < distance):
+                    distance = distanceCalc
+                    # node[7] = centroids.index(centroid)
+                    node[7] = nodeCH
+
+
+        # Calc new centroids
+        collection = []
+        sortedNodes = sorted(nodes, key=lambda node: node[7])
+        currentCH = sortedNodes[0][7]
+
+        centroids = []
+        for node in sortedNodes:
+            if(currentCH != node[7]):
+                centroids.append([np.mean(collection, axis=0).tolist(), []])
+                currentCH = node[7]
+                collection = []
+            collection.append([node[2], node[3]])
+        centroids.append([np.mean(collection, axis=0).tolist(), []])
+
+        # Reset Nodes Config
+        for node in CH:
+            node[6] = 0
+            nodes.append(node)
+        CH = []
+
+        for node in nodes:
+            node[7] = []
+            
         # Movement cycle
         for k in range(movements):
             # Definition of Centroids
             for node in nodes:
                 distance = ''
-                for nodeCH in CH:
-                    distanceCalc = K_means.calcDistance([node[2], node[3]], [nodeCH[2], nodeCH[3]])
+                for centroid in centroids:
+                    distanceCalc = K_means.calcDistance([node[2], node[3]], centroid[0])
                     if(distance == '' or distanceCalc < distance):
                         distance = distanceCalc
                         # node[7] = centroids.index(centroid)
-                        node[7] = nodeCH
+                        node[7] = centroid[0]
         
         
             # Calc new centroids
             collection = []
             sortedNodes = sorted(nodes, key=lambda node: node[7])
-            currentCH = sortedNodes[0][7]
+            currentCentroid = sortedNodes[0][7]
         
             centroids = []
             for node in sortedNodes:
                 if(currentCH != node[7]):
                     centroids.append([np.mean(collection, axis=0).tolist(), []])
-                    currentCH = node[7]
+                    currentCentroid = node[7]
                     collection = []
                 collection.append([node[2], node[3]])
             centroids.append([np.mean(collection, axis=0).tolist(), []])
-
-            # Reset Nodes Config
-            for node in CH:
-                node[6] = 0
-                nodes.append(node)
-            CH = []
-
-            for node in nodes:
-                node[7] = []
 
         # Select nearest node
         for centroid in centroids:

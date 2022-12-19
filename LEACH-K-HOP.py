@@ -4,6 +4,7 @@ import math
 import numpy as np
 
 from Kmedoids import K_medoids
+from Kmeans import K_means
 
 ############################### Geração de Redes ################################
 def gerarCenario(qtdNodes,distMax):
@@ -26,7 +27,8 @@ def selecao_CH(nodes, Round, Porcentagem):
             nodes.remove(k)
 
     if(len(CH) > 0):
-        CH = K_medoids.exec(CH, nodes, len(nodes))
+        # CH = K_medoids.exec(CH, nodes, len(nodes))
+        CH = K_means.exec(CH, nodes, len(nodes))
       
     return CH
 
@@ -159,9 +161,9 @@ list_qtdFrames = [1,4,7,10]
 list_tamPacoteTransmissao = [2000, 4000, 6000, 8000]
 list_percentualCH = [0.05, 0.10, 0.15, 0.20]
 list_qtdSetores = [2.0,4.0,6.0,8.0]
-list_area = [300,150,200,250]
+list_area = [250,150,200,250]
 
-total_simulacoes = 33
+total_simulacoes = 1
 framesSimulacao = []
 
 ############################### Main ################################

@@ -1,34 +1,39 @@
 
-from ntpath import join
 import os
 import random
 import math
 import numpy as np
 
+from ntpath import join
+from Kmedoids import K_medoids
+from Kmeans import K_means
+
 ############################### Geração de Redes ################################
-def gerarCenario(qtdNodes,distMax,modoOp):
+def gerarCenario(qtdNodes,distMax):
     nodes = []
     for i in range(1, qtdNodes+1):
         x = round(np.random.uniform(0, area), 2)
         y = round(np.random.uniform(0, area), 2)
-
-        # trap
-        increaseBattery = np.random.uniform(0.11, 0.11 + (modoOp[0]+modoOp[1])/10);
-
-        nodes.append([i, 0.5 + increaseBattery, x, y, distMax, 0, 0, [], [], 0])
+        nodes.append([i, 0.5, x, y, distMax, 0, 0, [], [], 0])
     return nodes
-
+    
 ############################### Functions ################################
-def selecao_CH(nodes, Round, Porcentagem):
-  CH = []
-  for k in nodes:
-    rand = random.random()
-    limiar = Porcentagem / (1.0 - Porcentagem * (Round % (1.0 / Porcentagem)))
-    if(limiar > rand) and (k[6] != 1):
-      k[6] = 1
-      CH.append(k)
-      nodes.remove(k)
-  return CH
+def selecao_CH(nodes, Round, Porcentagem, operation):
+    CH = []
+    for k in nodes:
+        rand = random.random()
+        limiar = Porcentagem / (1.0 - Porcentagem * (Round % (1.0 / Porcentagem)))
+        if(limiar > rand) and (k[6] != 1):
+            k[6] = 1
+            CH.append(k)
+            nodes.remove(k)
+
+    if(len(CH) > 0 and len(nodes) > 0 and operation == 'MEDOIDS'):
+        CH = K_medoids.exec(CH, nodes, len(nodes))
+    if(len(CH) > 0 and len(nodes) > 0 and operation == 'MEANS'):
+        CH = K_means.exec(CH, nodes, len(nodes))
+      
+    return CH
 
 def distancia(x1,y1,x2,y2):
   return math.sqrt((x1-x2)**2 + (y1-y2)**2)
@@ -160,14 +165,22 @@ def generateFile(nodes, round, fileName):
 CH = []
 tamPacoteConfig = 300
 
-total_simulacoes = 33
-framesSimulacao = []
-
 modosHop = [[0,0],[0,1],[1,0],[1,1]]
 operations = ['LEACH', 'MEANS', 'MEDOIDS']
 
+list_qtdNodes = [100, 150, 200, 250]
+list_qtdFrames = [1,4,7,10]
+list_tamPacoteTransmissao = [2000, 4000, 6000, 8000]
+list_percentualCH = [0.05, 0.10, 0.15, 0.20]
+list_qtdSetores = [2.0,4.0,6.0,8.0]
+list_area = [250,150,200,250]
+
+operation = operations[1]
+
+total_simulacoes = 1
+framesSimulacao = []
+
 ############################### Main ################################
-operation = operations[0]
 
 qtdNodes =             100
 qtdFrames =            1
@@ -200,7 +213,7 @@ for modoOp in modosHop:
     totalFrames = 0
 
     #trap
-    nodes = gerarCenario(qtdNodes, distMax, modoOp)
+    nodes = gerarCenario(qtdNodes, distMax)
 
     arq = open(join(current_dir, str(intraCluster) + str(interCluster) + '.txt'), 'w')
 
@@ -226,7 +239,7 @@ for modoOp in modosHop:
                 k[6] = 0
 
         # Realiza seleção de CH
-        CH = selecao_CH(nodes, Round, percentualCH)
+        CH = selecao_CH(nodes, Round, percentualCH, operation)
 
         # Conta os frames que foram executados
         totalFramesExecutados = 0

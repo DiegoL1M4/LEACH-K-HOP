@@ -62,7 +62,7 @@ class K_means:
         
             centroids = []
             for node in sortedNodes:
-                if(currentCH != node[7]):
+                if(currentCentroid != node[7]):
                     centroids.append([np.mean(collection, axis=0).tolist(), []])
                     currentCentroid = node[7]
                     collection = []
@@ -70,6 +70,9 @@ class K_means:
             centroids.append([np.mean(collection, axis=0).tolist(), []])
 
         # Select nearest node
+        for node in nodes:
+            node[7] = []
+            
         for centroid in centroids:
             distance = ''
             for node in nodes:

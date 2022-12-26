@@ -26,8 +26,8 @@ def selecao_CH(nodes, Round, Porcentagem):
             CH.append(k)
             nodes.remove(k)
 
-    # if(len(CH) > 0 and len(nodes) > 0):
-    #     CH = K_medoids.exec(CH, nodes, len(nodes))
+    if(len(CH) > 0 and len(nodes) > 0):
+        CH = K_medoids.exec(CH, nodes, len(nodes))
         # CH = K_means.exec(CH, nodes, len(nodes))
       
     return CH
@@ -163,23 +163,20 @@ CH = []
 tamPacoteConfig = 300
 
 modosHop = [[0,0],[0,1],[1,0],[1,1]]
-operations = ['LEACH', 'MEANS', 'MEDOIDS']
 
 list_qtdNodes = [100, 150, 200, 250]
 list_qtdFrames = [1,4,7,10]
 list_tamPacoteTransmissao = [2000, 4000, 6000, 8000]
 list_percentualCH = [0.05, 0.10, 0.15, 0.20]
 list_qtdSetores = [2.0,4.0,6.0,8.0]
-list_area = [250,150,200,250]
+list_area = [100,150,200,250]
 
-operation = operations[0]
-
-total_simulacoes = 1
+total_simulacoes = 10
 framesSimulacao = []
 
 ############################### Main ################################
 # Realiza a variação de um dos cenários (Quem usar a variável: cenario)
-for cenario in range(4):
+for cenario in range(1):
 
     qtdNodes =                         list_qtdNodes[0]
     qtdFrames =                       list_qtdFrames[0]
@@ -190,8 +187,6 @@ for cenario in range(4):
 
     distMax = distancia(0,0, area,area)
     BS = [0, area+25.0, area/2, 0.0, 0]
-
-    current_dir = join(os.path.dirname(os.path.realpath(__file__)), 'results')
 
     print("\n\nCENÁRIO: " + str(qtdNodes) + ' nodes, '
                       + str(qtdFrames) + ' frames, '

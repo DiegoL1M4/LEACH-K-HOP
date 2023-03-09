@@ -161,12 +161,15 @@ def generateFile(nodes, round, fileName):
             file.write("{} {}\n".format(str(round), str(node[1])))
 
 
+
+
+
 ############################### Variables ################################
 CH = []
+framesSimulacao = []
 tamPacoteConfig = 300
 
 modosHop = [[0,0],[0,1],[1,0],[1,1]]
-operations = ['LEACH', 'MEANS', 'MEDOIDS']
 
 list_qtdNodes = [100, 150, 200, 250]
 list_qtdFrames = [1,4,7,10]
@@ -175,10 +178,11 @@ list_percentualCH = [0.05, 0.10, 0.15, 0.20]
 list_qtdSetores = [2.0,4.0,6.0,8.0]
 list_area = [250,150,200,250]
 
-operation = operations[1]
+operationSelected = "LEACH" # LEACH | MEANS | MEDOIDS
 
-total_simulacoes = 1
-framesSimulacao = []
+
+
+
 
 ############################### Main ################################
 
@@ -239,7 +243,7 @@ for modoOp in modosHop:
                 k[6] = 0
 
         # Realiza seleção de CH
-        CH = selecao_CH(nodes, Round, percentualCH, operation)
+        CH = selecao_CH(nodes, Round, percentualCH, operationSelected)
 
         # Conta os frames que foram executados
         totalFramesExecutados = 0
@@ -430,5 +434,5 @@ for modoOp in modosHop:
 
 # FIM DE TODAS AS VARIAÇÕES DO LEACH-HOP ##########
 
-asdfoh = join(current_dir, "createGraphic.py")
-exec(open(asdfoh).read())
+# asdfoh = join(current_dir, "graphic-line.py")
+# exec(open(asdfoh).read())

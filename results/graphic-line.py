@@ -5,17 +5,19 @@ import os
 from posixpath import dirname
 import matplotlib.pyplot as plt
 
+plt.rcParams['figure.figsize'] = (6,5)
+
 # Chart config
 
-# label = ['LEACH', 'K-means', 'K-medoids']
-# ordem = [2,1,4]
-# stringChart = ['-','--','-.']
+label = ['LEACH', 'K-means', 'K-medoids']
+ordem = [2,1,4]
+stringChart = ['-','--','-.']
 
-label = ['K-means','K-means-INTER','K-means-INTRA','K-means-HOP']
-ordem = [1,2,3,4]
-stringChart = ['-','--','-.',':']
+# label = ['K-means','INTER','INTRA','HOP']
+# ordem = [1,2,3,4]
+# stringChart = ['-','--','-.',':']
 
-# label = ['K-medoids','K-medoids-INTER','K-medoids-INTRA','K-medoids-HOP']
+# label = ['K-medoids','INTER','INTRA','HOP']
 # ordem = [1,2,3,4]
 # stringChart = ['-','--','-.',':']
 
@@ -32,8 +34,8 @@ qtdRounds = 1700
 
 
 # Arquivo e Listas
-current_dir = join(os.path.dirname(os.path.realpath(__file__)), 'results')
-# current_dir = os.path.dirname(os.path.realpath(__file__))
+# current_dir = join(os.path.dirname(os.path.realpath(__file__)), 'results')
+current_dir = os.path.dirname(os.path.realpath(__file__))
 
 arq = [open(join(current_dir, '00.txt'), 'r'),
        open(join(current_dir, '01.txt'), 'r'),
@@ -80,8 +82,8 @@ for l in range(900):
 
 # Plot do gráfico
 #plt.title('Grafico do Tempo de Vida')
-plt.xlabel('Rounds')
-plt.ylabel('Total nodes still alive')
+plt.xlabel('Rounds', fontsize=15)
+plt.ylabel('Total de sensores vivos', fontsize=15)
 
 plt.axis([0, qtdRounds, -1, qtdNos + 3])
 plt.grid(True)
@@ -89,12 +91,12 @@ plt.grid(True)
 for k in range(totalSamples):
 	plt.plot(listaRounds[k], listaQtdNos[k], stringChart[k], label=label[k], zorder=ordem[k])
 
-plt.legend()
+plt.legend(fontsize=15)
 
 
 # Configura as margens da imagem
 plt.subplots_adjust(left=0.11, bottom=0.11, right=0.96, top=0.96, wspace=None, hspace=None)
 
-plt.savefig('tempo_de_vida.png')
+plt.savefig('comp_x.png')
 plt.show()
 

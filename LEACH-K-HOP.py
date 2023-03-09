@@ -16,7 +16,7 @@ def gerarCenario(qtdNodes,distMax):
     return nodes
     
 ############################### Functions ################################
-def selecao_CH(nodes, Round, Porcentagem):
+def selecao_CH(nodes, Round, Porcentagem, operation):
     CH = []
     for k in nodes:
         rand = random.random()
@@ -26,9 +26,10 @@ def selecao_CH(nodes, Round, Porcentagem):
             CH.append(k)
             nodes.remove(k)
 
-    if(len(CH) > 0 and len(nodes) > 0):
+    if(len(CH) > 0 and len(nodes) > 0 and operation == 'MEDOIDS'):
         CH = K_medoids.exec(CH, nodes, len(nodes))
-        # CH = K_means.exec(CH, nodes, len(nodes))
+    if(len(CH) > 0 and len(nodes) > 0 and operation == 'MEANS'):
+        CH = K_means.exec(CH, nodes, len(nodes))
       
     return CH
 
@@ -150,16 +151,13 @@ def desvio_padrao(valores, media):
         soma += math.pow( (valor - media), 2)
     return math.sqrt( soma / float( len(valores) ) )
 
-def generateFile(nodes, round, fileName):
-    arq = open(join(current_dir, fileName + '.txt'), 'a')
 
-    with arq as file:
-        for node in nodes:
-            file.write("{} {}\n".format(str(round), str(node[1])))
+
 
 
 ############################### Variables ################################
 CH = []
+framesSimulacao = []
 tamPacoteConfig = 300
 
 modosHop = [[0,0],[0,1],[1,0],[1,1]]
@@ -171,8 +169,12 @@ list_percentualCH = [0.05, 0.10, 0.15, 0.20]
 list_qtdSetores = [2.0,4.0,6.0,8.0]
 list_area = [100,150,200,250]
 
-total_simulacoes = 10
-framesSimulacao = []
+total_simulacoes = 33
+operationSelected = "LEACH" # LEACH | MEANS | MEDOIDS
+
+
+
+
 
 ############################### Main ################################
 # Realiza a variação de um dos cenários (Quem usar a variável: cenario)
@@ -230,7 +232,7 @@ for cenario in range(1):
                         k[6] = 0
 
                 # Realiza seleção de CH
-                CH = selecao_CH(nodes, Round, percentualCH)
+                CH = selecao_CH(nodes, Round, percentualCH, operationSelected)
 
                 # Conta os frames que foram executados
                 totalFramesExecutados = 0
@@ -377,13 +379,13 @@ for cenario in range(1):
                                 node[1] = gastoTx(node[1],node[4],tamPacoteTransmissao)
                                 if(node[1] >= 0):
                                     # Confirma que houve um envio a BS
-                                	confirmaFrame += 1
+                                    confirmaFrame += 1
 
                             # Aumenta apenas se algum pacote foi enviado para a BS
                             if(confirmaFrame > 0):
-                            	totalFramesExecutados += 1
+                                totalFramesExecutados += 1
 
-            		# FECHAMENTO DO ROUND
+                    # FECHAMENTO DO ROUND
                     # Encerramento do Round
                     for k in CH:
                         nodes.append(k)
